@@ -355,7 +355,11 @@ export class Dispatcher {
   }
 
   /** Push the current branch. */
-  public push(repository: Repository, options?: PushOptions): Promise<void> {
+  public push(repository: Repository): Promise<void> {
+    return this.appStore._push(repository)
+  }
+
+  private pushWithOptions(repository: Repository, options?: PushOptions) {
     if (options !== undefined && options.forceWithLease) {
       this.dropCurrentBranchFromForcePushList(repository)
     }
@@ -1540,7 +1544,7 @@ export class Dispatcher {
   }
 
   public async performForcePush(repository: Repository) {
-    await this.push(repository, {
+    await this.pushWithOptions(repository, {
       forceWithLease: true,
     })
 
